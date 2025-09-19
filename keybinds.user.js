@@ -6,6 +6,8 @@
 // @author       meqativ, gemini
 // @homepageURL  https://kutt.it/meqa
 // @match        https://wplace.live/*
+// @downloadURL  https://raw.githubusercontent.com/gay-coders/wplace-scripts/refs/heads/main/keybinds.user.js
+// @updateURL    https://raw.githubusercontent.com/gay-coders/wplace-scripts/refs/heads/main/keybinds.user.js
 // @grant        GM_addStyle
 // @grant        GM.getValue
 // @grant        GM.setValue

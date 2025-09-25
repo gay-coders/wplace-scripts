@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         keybinds (Blue Marble addon)
 // @namespace    https://kutt.it/meqa
-// @version      0.2.2
+// @version      0.2.3
 // @description  Adds a configurable keybind menu for common (and not so common) actions to Blue Marble or its derivatives' UI
 // @author       meqativ
 // @homepageURL  https://kutt.it/meqa
@@ -158,7 +158,7 @@ function dispatchFakeMousemove(event) {
   credits.style.fontSize = "0.74rem";
   credits.style.opacity = "0.85";
   credits.style.paddingInline = "0.25rem";
-  credits.innerHTML = `Keybinds 🌎 🧩 by <a style="color: #c386ff; text-decoration:underline !important;" href="https://kutt.it/meqa">meqativ</a> | v${GM_info.script.version}`;
+  credits.innerHTML = `Keybinds🌎🧩by <a style="color: #c386ff; text-decoration:underline !important;" href="https://kutt.it/meqa">meqativ</a> | v${GM_info.script.version}`;
   content.appendChild(credits);
   container.appendChild(content);
 
@@ -222,8 +222,8 @@ function dispatchFakeMousemove(event) {
 		flex-flow: column;
 		border-top-left-radius: unset;
 		border-top-right-radius: unset;
-		margin-top: -5px;
-		padding-top: 5px;
+		margin-top: -15px;
+		padding-top: 15px;
 		position: relative;
 		z-index: 0;
 	}
@@ -231,14 +231,15 @@ function dispatchFakeMousemove(event) {
 		max-height: calc(2rem*5.5);
 		overflow: scroll;
 	}
-	.bm-keybind-row { 
+	.bm-keybind-row {  
 		display: flex;
 		justify-content: start;
-		align-items: center;
-		padding-inline: 0.2rem;
-		min-height: 2rem;
 		flex-flow: row-reverse;
 		gap: 0.5rem;
+		align-items: center;
+		height: fit-content;
+		box-sizing: border-box;
+		min-height: 2.05rem;
 	}
 	.bm-keybind-row span {
 		font-weight: 500;

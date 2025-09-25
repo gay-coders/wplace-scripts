@@ -6,4 +6,6 @@ this repo has one (1) userscript for now, we'll probably add more as we make the
 # Scripts
 - Keybinds (addon for BlueMarble, forks supported) - [`press me to install`](https://raw.githubusercontent.com/gay-coders/wplace-scripts/refs/heads/main/keybinds.user.js) - by [@meqativ](https://github.com/meqativ)
 > This adds a ui to blue marble to change the keybind to various stuff on wplace<br/>
-> <img width="296" height="256" alt="image" src="https://github.com/user-attachments/assets/d932eeba-e205-41a6-ba5a-1f08e31cde18" />
+> Blue Marble             |  Skirk Marble
+> :-------------------------:|:-------------------------:
+> <img width="301" height="275" alt="image" src="https://github.com/user-attachments/assets/4865d5d4-a67e-4005-9cd1-eeffe9febcf6" /> | <img width="350" height="302" alt="image" src="https://github.com/user-attachments/assets/8a49d725-c446-489a-92a3-154128c8c6e5" />

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         keybinds (Blue Marble addon)
 // @namespace    https://kutt.it/meqa
-// @version      0.3.14
+// @version      0.3.4
 // @description  Adds a configurable keybind menu for common (and not so common) actions to the UI of Blue Marble or its derivatives'
 // @author       meqativ
 // @homepageURL  https://kutt.it/meqa
@@ -150,10 +150,10 @@ function dispatchFakeMousemove(event, click) {
   (/------ UI ------/); // prettier-ignore
   const container = document.createElement("div");
   container.id = "bm-keybind-container";
-  container.className = "bm-keybind-container";
+  container.classList.add("bm-keybind-container")
 
   const toggleButton = document.createElement("button");
-  toggleButton.className = "bm-keybind-toggle";
+  toggleButton.classList.add("bm-keybind-toggle");
   toggleButton.innerHTML = `
 	<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff" style="scroll-behavior: auto !important;">
 		<path d="M172.31-220Q142-220 121-241q-21-21-21-51.31v-375.38Q100-698 121-719q21-21 51.31-21h615.38Q818-740 839-719q21 21 21 51.31v375.38Q860-262 839-241q-21 21-51.31 21H172.31Zm0-60h615.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-375.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v375.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85Zm152.31-44.62h310.76v-70.76H324.62v70.76Zm-120-120h70.76v-70.76h-70.76v70.76Zm120 0h70.76v-70.76h-70.76v70.76Zm120 0h70.76v-70.76h-70.76v70.76Zm120 0h70.76v-70.76h-70.76v70.76Zm120 0h70.76v-70.76h-70.76v70.76Zm-480-120h70.76v-70.76h-70.76v70.76Zm120 0h70.76v-70.76h-70.76v70.76Zm120 0h70.76v-70.76h-70.76v70.76Zm120 0h70.76v-70.76h-70.76v70.76Zm120 0h70.76v-70.76h-70.76v70.76ZM160-280v-400 400Z"/>
@@ -221,8 +221,8 @@ function dispatchFakeMousemove(event, click) {
 	GM_addStyle(`
 	div[id^="bm-"]:has(hr[style="display: none;"]) .bm-keybind-container { display: none; }
 	.bm-keybind-container { margin-block: 2px; font-size: small; width: 100%; }
-	.bm-keybind-container["data-is-line-drawing"="true"] {
-		border: 1px solid rgba(0, 255, 0, 0.6);
+	.bm-keybind-container[data-is-line-drawing=true] :is(.bm-keybind-content,.bm-keybind-input[data-action-id="line_drawing"]) {
+		outline: 1px solid rgba(150, 255, 0, 1) !important;
 	}
 	.bm-keybind-toggle {
 		width: 100%;
@@ -353,7 +353,7 @@ function dispatchFakeMousemove(event, click) {
     { id: "action", name: "Actions UI", defaultKey: ["a"] },
 		{
 			id: "line_drawing",
-			name: "Toggle line drawing mode (also hold Space btw)",
+			name: "Toggle lines mode (click around while holding space, highlighted in green when enabled)",
 			defaultKey: ["l"],
 		},
     { id: "zoomIn", name: "Zoom In", defaultKey: ["=", "+"] },

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         keybinds (Blue Marble addon)
 // @namespace    https://kutt.it/meqa
-// @version      0.2.3
-// @description  Adds a configurable keybind menu for common (and not so common) actions to Blue Marble or its derivatives' UI
+// @version      0.3.0
+// @description  Adds a configurable keybind menu for common (and not so common) actions to the UI of Blue Marble or its derivatives'
 // @author       meqativ
 // @homepageURL  https://kutt.it/meqa
 // @match        https://wplace.live/*
@@ -22,7 +22,7 @@ const consoleStyle = (bgcolor) => `
 	width: fit-content;
 	padding: 2px;
 `;
-	
+
 const log = (...args) => (unsafeWindow.logs) ? console.log(`%c[Keybinds 🌎🧩]:%c`, consoleStyle("#00000423"), "", ...args) : undefined // prettier-ignore
 const error = (...args) => console.error(`%c[Keybinds 🌎🧩]:%c`, consoleStyle("#e6213423"), "", ...args) // prettier-ignore
 unsafeWindow.logs = false;
@@ -63,7 +63,7 @@ async function sleepTillTrue(predicate, maxTries = 100, interval = 100) {
 		);
 	});
 }
-function dispatchFakeMousemove(event) {
+function dispatchFakeMousemove(event, click) {
 	const mouseMoveEvent = new MouseEvent('mousemove', {
 		bubbles: true,
 		cancelable: true,
@@ -73,55 +73,68 @@ function dispatchFakeMousemove(event) {
 		screenX: event.screenX,
 		screenY: event.screenY,
 		button: event.button,
-		buttons: event.buttons,
+		buttons: click ? 6969 : event.buttons,
 		altKey: event.altKey,
 		ctrlKey: event.ctrlKey,
 		shiftKey: event.shiftKey,
 		metaKey: event.metaKey,
-		relatedTarget: event.target,
+		relatedTarget: event.target
 	});
-	document.dispatchEvent(mouseMoveEvent);
+	unsafeWindow.document.dispatchEvent(mouseMoveEvent);
 }
 
 (async () => {
   let mousemoveBlocked = false;
   let mousemoveListenerAdded = false;
   let lastMousemoveEvent = null;
-
-  function addMousemoveBlocker() {
+  function handleClick(e) {
+    dispatchFakeMousemove(e, true)
+  }
+  function addMousemoveBlocker(click) {
     if (!mousemoveListenerAdded) {
       document.addEventListener("mousemove", handleMousemove, {
         capture: true,
         passive: false,
       });
       mousemoveListenerAdded = true;
+
+      if (click) document.addEventListener("click", handleClick, {
+        capture: true,
+        passive: false,
+      });
     }
   }
 
-  function removeMousemoveBlocker() {
+  function removeMousemoveBlocker(click) {
     if (mousemoveListenerAdded) {
       document.removeEventListener("mousemove", handleMousemove, {
         capture: true,
         passive: false,
       });
       mousemoveListenerAdded = false;
+
+      if (click) unsafeWindow.document.removeEventListener("click", handleClick, {
+        capture: true,
+        passive: false,
+      });
     }
   }
 
   function handleMousemove(event) {
     lastMousemoveEvent = event;
+    if (event.buttons === 6969) return;
     event.stopPropagation();
     event.preventDefault();
   }
 
-  function toggleMousemoveBlocking(state) {
+  function toggleMousemoveBlocking(state, click) {
     mousemoveBlocked = state ?? !mousemoveBlocked;
 
     if (mousemoveBlocked) {
-      addMousemoveBlocker();
+      addMousemoveBlocker(click);
       log("Mousemove events blocked.");
     } else {
-      removeMousemoveBlocker();
+      removeMousemoveBlocker(click);
 			dispatchFakeMousemove(lastMousemoveEvent)
       log("Mousemove events unblocked.");
     }
@@ -198,7 +211,7 @@ function dispatchFakeMousemove(event) {
 	GM_addStyle(`
 	div[id^="bm-"]:has(hr[style="display: none;"]) .bm-keybind-container { display: none; }
 	.bm-keybind-container { margin-block: 2px; font-size: small; width: 100%; }
-	.bm-keybind-toggle { 
+	.bm-keybind-toggle {
 		width: 100%;
 		text-align: left;
 		padding: 4px 8px !important;
@@ -231,7 +244,7 @@ function dispatchFakeMousemove(event) {
 		max-height: calc(2rem*5.5);
 		overflow: scroll;
 	}
-	.bm-keybind-row {  
+	.bm-keybind-row {
 		display: flex;
 		justify-content: start;
 		flex-flow: row-reverse;
@@ -294,7 +307,11 @@ function dispatchFakeMousemove(event) {
 			mousemove_hold () {
 				toggleMousemoveBlocking();
 				return true;
-			}
+			},
+      line_drawing () {
+				toggleMousemoveBlocking(undefined, true);
+				return true;
+      }
     },
     getButton(name = "Unknown") {
       let selector = this.index[name];
@@ -321,6 +338,11 @@ function dispatchFakeMousemove(event) {
   };
   const keybindableActions = [
     { id: "action", name: "Actions UI", defaultKey: ["a"] },
+		{
+			id: "line_drawing",
+			name: "Toggle line drawing mode (also hold Space btw)",
+			defaultKey: ["l"],
+		},
     { id: "zoomIn", name: "Zoom In", defaultKey: ["=", "+"] },
     { id: "zoomOut", name: "Zoom Out", defaultKey: ["-"] },
     { id: "eraser", name: "Eraser", defaultKey: ["e", "x"] },
@@ -356,7 +378,7 @@ function dispatchFakeMousemove(event) {
   let oldBinds = await GM.getValue("blueMarble_keybinds_v2", null);
   if (oldBinds) { // move away from ai generated storage key
 		GM.setValue("blueMarble_keybinds_v2", undefined);
-		GM.setValue("keybinds", oldBinds); 
+		GM.setValue("keybinds", oldBinds);
 	}
   let currentBinds = await GM.getValue("keybinds", defaultBinds());
 

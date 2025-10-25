@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         keybinds (Blue Marble addon)
 // @namespace    https://kutt.it/meqa
-// @version      0.3.0
+// @version      0.3.14
 // @description  Adds a configurable keybind menu for common (and not so common) actions to the UI of Blue Marble or its derivatives'
 // @author       meqativ
 // @homepageURL  https://kutt.it/meqa
@@ -98,10 +98,13 @@ function dispatchFakeMousemove(event, click) {
       });
       mousemoveListenerAdded = true;
 
-      if (click) document.addEventListener("click", handleClick, {
+      if (click) {
+				green(true)
+				document.addEventListener("click", handleClick, {
         capture: true,
         passive: false,
       });
+		}
     }
   }
 
@@ -113,10 +116,13 @@ function dispatchFakeMousemove(event, click) {
       });
       mousemoveListenerAdded = false;
 
-      if (click) unsafeWindow.document.removeEventListener("click", handleClick, {
+      if (click) {
+				green(false)
+				 document.removeEventListener("click", handleClick, {
         capture: true,
         passive: false,
       });
+		}
     }
   }
 
@@ -174,7 +180,9 @@ function dispatchFakeMousemove(event, click) {
   credits.innerHTML = `Keybinds🌎🧩by <a style="color: #c386ff; text-decoration:underline !important;" href="https://kutt.it/meqa">meqativ</a> | v${GM_info.script.version}`;
   content.appendChild(credits);
   container.appendChild(content);
-
+	function green(state) {
+		container.setAttribute("data-is-line-drawing", `${state}`)
+	}
   function createKeybindInput(action) {
     const row = document.createElement("div");
     row.className = "bm-keybind-row";
@@ -203,14 +211,19 @@ function dispatchFakeMousemove(event, click) {
     arrow.classList.toggle("down");
   });
 	let _put = false;
+	let ui_is_here;
   function putUIBefore(parent) {
 		parent.parentNode.insertBefore(container, parent);
 		if (_put) throw new Error("Tried to place Keybinds ui twice");
 		_put = true
+		ui_is_here = parent
 
 	GM_addStyle(`
 	div[id^="bm-"]:has(hr[style="display: none;"]) .bm-keybind-container { display: none; }
 	.bm-keybind-container { margin-block: 2px; font-size: small; width: 100%; }
+	.bm-keybind-container["data-is-line-drawing"="true"] {
+		border: 1px solid rgba(0, 255, 0, 0.6);
+	}
 	.bm-keybind-toggle {
 		width: 100%;
 		text-align: left;

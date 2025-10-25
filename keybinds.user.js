@@ -28,59 +28,57 @@ const error = (...args) => console.error(`%c[Keybinds 🌎🧩]:%c`, consoleStyl
 unsafeWindow.logs = false;
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 async function doWhenTrue(predicate, cb, maxTries = 100, interval = 100) {
-	let i = 0;
-	let out;
-	while (!((out = predicate()), out)) {
-		i++;
-		if (i > maxTries)
-			return cb(false, {
-				predicate,
-				maxTries,
-				interval,
-				cb,
-				attempts: i,
-				out,
-			});
-		await sleep(interval);
-	}
-	cb(true, { predicate, maxTries, interval, cb, attempts: i });
+  let i = 0;
+  let out;
+  while (!((out = predicate()), out)) {
+    i++;
+    if (i > maxTries)
+      return cb(false, {
+        predicate,
+        maxTries,
+        interval,
+        cb,
+        attempts: i,
+        out,
+      });
+    await sleep(interval);
+  }
+  cb(true, { predicate, maxTries, interval, cb, attempts: i });
 }
 async function sleepTillTrue(predicate, maxTries = 100, interval = 100) {
-	return new Promise((res, rej) => {
-		doWhenTrue(
-			predicate,
-			function (success, data) {
-				if (!success)
-					return rej(
-						new Error(
-							`Predicate didn't match after ${data.attempts} attempts.`
-						)
-					);
-				res();
-			},
-			maxTries,
-			interval
-		);
-	});
+  return new Promise((res, rej) => {
+    doWhenTrue(
+      predicate,
+      function (success, data) {
+        if (!success)
+          return rej(
+            new Error(`Predicate didn't match after ${data.attempts} attempts.`)
+          );
+        res();
+      },
+      maxTries,
+      interval
+    );
+  });
 }
 function dispatchFakeMousemove(event, click) {
-	const mouseMoveEvent = new MouseEvent('mousemove', {
-		bubbles: true,
-		cancelable: true,
-		view: unsafeWindow,
-		clientX: event.clientX,
-		clientY: event.clientY,
-		screenX: event.screenX,
-		screenY: event.screenY,
-		button: event.button,
-		buttons: click ? 6969 : event.buttons,
-		altKey: event.altKey,
-		ctrlKey: event.ctrlKey,
-		shiftKey: event.shiftKey,
-		metaKey: event.metaKey,
-		relatedTarget: event.target
-	});
-	unsafeWindow.document.dispatchEvent(mouseMoveEvent);
+  const mouseMoveEvent = new MouseEvent("mousemove", {
+    bubbles: true,
+    cancelable: true,
+    view: unsafeWindow,
+    clientX: event.clientX,
+    clientY: event.clientY,
+    screenX: event.screenX,
+    screenY: event.screenY,
+    button: event.button,
+    buttons: click ? 6969 : event.buttons,
+    altKey: event.altKey,
+    ctrlKey: event.ctrlKey,
+    shiftKey: event.shiftKey,
+    metaKey: event.metaKey,
+    relatedTarget: event.target,
+  });
+  unsafeWindow.document.dispatchEvent(mouseMoveEvent);
 }
 
 (async () => {
@@ -88,7 +86,7 @@ function dispatchFakeMousemove(event, click) {
   let mousemoveListenerAdded = false;
   let lastMousemoveEvent = null;
   function handleClick(e) {
-    dispatchFakeMousemove(e, true)
+    dispatchFakeMousemove(e, true);
   }
   function addMousemoveBlocker(click) {
     if (!mousemoveListenerAdded) {
@@ -99,12 +97,12 @@ function dispatchFakeMousemove(event, click) {
       mousemoveListenerAdded = true;
 
       if (click) {
-				green(true)
-				document.addEventListener("click", handleClick, {
-        capture: true,
-        passive: false,
-      });
-		}
+        green(true);
+        document.addEventListener("click", handleClick, {
+          capture: true,
+          passive: false,
+        });
+      }
     }
   }
 
@@ -117,12 +115,12 @@ function dispatchFakeMousemove(event, click) {
       mousemoveListenerAdded = false;
 
       if (click) {
-				green(false)
-				 document.removeEventListener("click", handleClick, {
-        capture: true,
-        passive: false,
-      });
-		}
+        green(false);
+        document.removeEventListener("click", handleClick, {
+          capture: true,
+          passive: false,
+        });
+      }
     }
   }
 
@@ -141,16 +139,16 @@ function dispatchFakeMousemove(event, click) {
       log("Mousemove events blocked.");
     } else {
       removeMousemoveBlocker(click);
-			dispatchFakeMousemove(lastMousemoveEvent)
+      dispatchFakeMousemove(lastMousemoveEvent);
       log("Mousemove events unblocked.");
     }
     return mousemoveBlocked;
-  };
+  }
 
   (/------ UI ------/); // prettier-ignore
   const container = document.createElement("div");
   container.id = "bm-keybind-container";
-  container.classList.add("bm-keybind-container")
+  container.classList.add("bm-keybind-container");
 
   const toggleButton = document.createElement("button");
   toggleButton.classList.add("bm-keybind-toggle");
@@ -180,9 +178,9 @@ function dispatchFakeMousemove(event, click) {
   credits.innerHTML = `Keybinds🌎🧩by <a style="color: #c386ff; text-decoration:underline !important;" href="https://kutt.it/meqa">meqativ</a> | v${GM_info.script.version}`;
   content.appendChild(credits);
   container.appendChild(content);
-	function green(state) {
-		container.setAttribute("data-is-line-drawing", `${state}`)
-	}
+  function green(state) {
+    container.setAttribute("data-is-line-drawing", `${state}`);
+  }
   function createKeybindInput(action) {
     const row = document.createElement("div");
     row.className = "bm-keybind-row";
@@ -210,15 +208,15 @@ function dispatchFakeMousemove(event, click) {
     content.classList.toggle("visible");
     arrow.classList.toggle("down");
   });
-	let _put = false;
-	let ui_is_here;
+  let _put = false;
+  let ui_is_here;
   function putUIBefore(parent) {
-		parent.parentNode.insertBefore(container, parent);
-		if (_put) throw new Error("Tried to place Keybinds ui twice");
-		_put = true
-		ui_is_here = parent
+    parent.parentNode.insertBefore(container, parent);
+    if (_put) throw new Error("Tried to place Keybinds ui twice");
+    _put = true;
+    ui_is_here = parent;
 
-	GM_addStyle(`
+    GM_addStyle(`
 	div[id^="bm-"]:has(hr[style="display: none;"]) .bm-keybind-container { display: none; }
 	.bm-keybind-container { margin-block: 2px; font-size: small; width: 100%; }
 	.bm-keybind-container[data-is-line-drawing=true] :is(.bm-keybind-content,.bm-keybind-input[data-action-id="line_drawing"]) {
@@ -313,18 +311,18 @@ function dispatchFakeMousemove(event, click) {
         "M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm240-400v80h80v-80h-80Zm-160 0v80h80v-80h-80Zm80 80v80h80v-80h-80Zm160 0v80h80v-80h-80Zm-320 0v80h80v-80h-80Zm400-80v80h80v80h80v-80h-80v-80h-80ZM280-360v80h-80v80h80v-80h80v80h80v-80h80v80h80v-80h80v80h80v-80h-80v-80h-80v80h-80v-80h-80v80h-80v-80h-80Zm480-160v80-80Zm0 160v80-80Z",
         "M440-440v-80h80v80h-80Zm-80 80v-80h80v80h-80Zm160 0v-80h80v80h-80Zm80-80v-80h80v80h-80Zm-320 0v-80h80v80h-80Zm-80 320q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm80-80h80v-80h-80v80Zm160 0h80v-80h-80v80Zm320 0v-80 80Zm-560-80h80v-80h80v80h80v-80h80v80h80v-80h80v80h80v-80h-80v-80h80v-320H200v320h80v80h-80v80Zm0 80v-560 560Zm560-240v80-80ZM600-280v80h80v-80h-80Z",
       ],
-			mousemove () {
-				toggleMousemoveBlocking();
-				return true;
-			},
-			mousemove_hold () {
-				toggleMousemoveBlocking();
-				return true;
-			},
-      line_drawing () {
-				toggleMousemoveBlocking(undefined, true);
-				return true;
-      }
+      mousemove() {
+        toggleMousemoveBlocking();
+        return true;
+      },
+      mousemove_hold() {
+        toggleMousemoveBlocking();
+        return true;
+      },
+      line_drawing() {
+        toggleMousemoveBlocking(undefined, true);
+        return true;
+      },
     },
     getButton(name = "Unknown") {
       let selector = this.index[name];
@@ -351,11 +349,11 @@ function dispatchFakeMousemove(event, click) {
   };
   const keybindableActions = [
     { id: "action", name: "Actions UI", defaultKey: ["a"] },
-		{
-			id: "line_drawing",
-			name: "Toggle lines mode (click around while holding space, highlighted in green when enabled)",
-			defaultKey: ["l"],
-		},
+    {
+      id: "line_drawing",
+      name: "Toggle lines mode (click around while holding space, highlighted in green when enabled)",
+      defaultKey: ["l"],
+    },
     { id: "zoomIn", name: "Zoom In", defaultKey: ["=", "+"] },
     { id: "zoomOut", name: "Zoom Out", defaultKey: ["-"] },
     { id: "eraser", name: "Eraser", defaultKey: ["e", "x"] },
@@ -366,17 +364,17 @@ function dispatchFakeMousemove(event, click) {
       defaultKey: ["v"],
       holdInteraction: true,
     },
-		{
-			id: "mousemove",
-			name: "Toggle mousemove events",
-			defaultKey: [],
-		},
-		{
-			id: "mousemove_hold",
-			name: "Toggle mousemove events (hold)",
-			defaultKey: [],
-			holdInteraction: true,
-		},
+    {
+      id: "mousemove",
+      name: "Toggle mousemove events",
+      defaultKey: [],
+    },
+    {
+      id: "mousemove_hold",
+      name: "Toggle mousemove events (hold)",
+      defaultKey: [],
+      holdInteraction: true,
+    },
     // { id: 'panLeft', name: "Pan ← Reft", defaultKey: ["ArrowLeft"], repeating: true },
     // { id: 'panRight', name: "Pan → Right", defaultKey: ["ArrowRight"], repeating: true },
     // { id: 'panUp', name: "Pan ↑ Up", defaultKey: ["ArrowUp"], repeating: true },
@@ -389,10 +387,11 @@ function dispatchFakeMousemove(event, click) {
     }, {});
 
   let oldBinds = await GM.getValue("blueMarble_keybinds_v2", null);
-  if (oldBinds) { // move away from ai generated storage key
-		GM.setValue("blueMarble_keybinds_v2", undefined);
-		GM.setValue("keybinds", oldBinds);
-	}
+  if (oldBinds) {
+    // move away from ai generated storage key
+    GM.setValue("blueMarble_keybinds_v2", undefined);
+    GM.setValue("keybinds", oldBinds);
+  }
   let currentBinds = await GM.getValue("keybinds", defaultBinds());
 
   const activeKeys = new Set();
@@ -409,7 +408,11 @@ function dispatchFakeMousemove(event, click) {
     const action = keybindableActions.find((a) =>
       currentBinds[a.id]?.map((k) => k.toLowerCase()).includes(pressedKey)
     );
-    log("Detected keypress:", `${pressedKey} ${eventType === "keydown" ? "↓" : "↑"}`, action);
+    log(
+      "Detected keypress:",
+      `${pressedKey} ${eventType === "keydown" ? "↓" : "↑"}`,
+      action
+    );
     if (!action) return;
 
     function clickButton() {
@@ -437,7 +440,7 @@ function dispatchFakeMousemove(event, click) {
   ["keydown", "keyup"].forEach((eventName) =>
     document.addEventListener(eventName, (e) => handleKeyEvent(e, eventName))
   );
-	keybindInputs = []
+  keybindInputs = [];
   revertButton.addEventListener("click", async () => {
     if (
       confirm(
@@ -447,14 +450,14 @@ function dispatchFakeMousemove(event, click) {
       log("Backup of previous keybinds:", JSON.stringify(currentBinds));
       currentBinds = defaultBinds();
       await GM.setValue("keybinds", currentBinds);
-      for (let input of keybindInputs) input.value = "Reloading..."
+      for (let input of keybindInputs) input.value = "Reloading...";
       for (let input of keybindInputs) {
-				await sleep(50)
-				input.focus()
-				input.blur()
-			}
-			revertButton.focus()
-			revertButton.blur()
+        await sleep(50);
+        input.focus();
+        input.blur();
+      }
+      revertButton.focus();
+      revertButton.blur();
     }
   });
   function createAndBindKeybindInput(action) {
@@ -495,7 +498,7 @@ function dispatchFakeMousemove(event, click) {
       input.blur();
     });
     input.blur(); // why the fuck is "unfocus" called blur
-		keybindInputs.push(input)
+    keybindInputs.push(input);
   }
   keybindableActions.forEach(createAndBindKeybindInput);
   doWhenTrue(

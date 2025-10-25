@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         keybinds (Blue Marble addon)
 // @namespace    https://kutt.it/meqa
-// @version      0.3.5
+// @version      0.3.6
 // @description  Adds a configurable keybind menu for common (and not so common) actions to the UI of Blue Marble or its derivatives'
 // @author       meqativ
 // @homepageURL  https://kutt.it/meqa
@@ -348,7 +348,7 @@ function dispatchFakeMousemove(event, click) {
     },
   };
   const keybindableActions = [
-    { id: "action", name: "Actions UI", defaultKey: ["a"] },
+    { id: "action", name: "Paint UI", defaultKey: ["a"] },
     {
       id: "line_drawing",
       name: "Toggle lines mode (click around while holding space)",
